@@ -12,6 +12,7 @@ function MouseEvents() {
 
 		gosRef.current.api.subscribe('click', (_, eventData) => {
 			const { genomicPosition: p } = eventData;
+			window.alert(p.chromosome);
 			setPosition(`${p.chromosome}:${p.position}`)
 			setData(eventData.data);
 		});
@@ -41,49 +42,253 @@ function MouseEvents() {
 			</div>
 			<GoslingComponent
 				ref={gosRef}
-				spec={{ 
-					style: { 
-						outlineWidth: 0,
-						select: { color: 'grey' },
-						mouseOver: { stroke: 'black', strokeWidth: 1 }
-					},
-					xDomain: {chromosome: '1', interval: [136750, 139450]},
-					spacing: 0,
-					tracks: [
+				spec={{
+					title: 'Results',
+					style: {linkStyle: 'elliptical'},
+					views: [
 						{
-							title: 'Click or mouse drag w/ ALT',
-							experimental: { mouseEvents: true },
+							alignment: 'overlay',
+							assembly: 'hg38',
+							title: 'Gene annotation',
+							linkingId: 'view1',
+							xDomain: {chromosome: 'chr22', interval: [17084954-100000, 17115694+100000]},
 							data: {
-								type: 'bam',
-								url: 'https://somatic-browser-test.s3.amazonaws.com/SRR7890905_GAPFI2USVS21.bam',
-								indexUrl: 'https://somatic-browser-test.s3.amazonaws.com/SRR7890905_GAPFI2USVS21.bam.bai'
+								url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+								type: 'beddb',
+								genomicFields: [
+									{index: 1, name: 'start'},
+									{index: 2, name: 'end'}
+								],
+								valueFields: [
+									{index: 5, name: 'strand', type: 'nominal'},
+									{index: 3, name: 'name', type: 'nominal'}
+								],
+								exonIntervalFields: [
+									{index: 12, name: 'start'},
+									{index: 13, name: 'end'}
+								]
 							},
-							mark: 'rect',
-							dataTransform: [
+							tracks: [
 								{
-									type: 'displace',
-									method: 'pile',
-									boundingBox: {
-										startField: 'start',
-										endField: 'end',
-										padding: 5,
-										isPaddingBP: true
-									},
-									newField: 'pileup-row'
+									experimental: { mouseEvents: true },
+									dataTransform: [
+										{type: 'filter', field: 'type', oneOf: ['gene']},
+										{type: 'filter', field: 'strand', oneOf: ['+']}
+									],
+									mark: 'triangleRight',
+									x: {field: 'end', type: 'genomic', axis: 'top'},
+									size: {value: 15},
+								},
+								{
+									experimental: { mouseEvents: true },
+									dataTransform: [
+										{type: 'filter', field: 'type', oneOf: ['gene']}
+									],
+									mark: 'text',
+									text: {field: 'name', type: 'nominal'},
+									x: {field: 'start', type: 'genomic'},
+									xe: {field: 'end', type: 'genomic'},
+									style: {dy: -15}
+								},
+								{
+									experimental: { mouseEvents: true },
+									dataTransform: [
+										{type: 'filter', field: 'type', oneOf: ['gene']},
+										{type: 'filter', field: 'strand', oneOf: ['-']}
+									],
+									mark: 'triangleLeft',
+									x: {field: 'start', type: 'genomic'},
+									size: {value: 15},
+									style: {align: 'right'}
+								},
+								{
+									experimental: { mouseEvents: true },
+									dataTransform: [
+										{type: 'filter', field: 'type', oneOf: ['exon']}
+									],
+									mark: 'rect',
+									x: {field: 'start', type: 'genomic'},
+									size: {value: 15},
+									xe: {field: 'end', type: 'genomic'}
+								},
+								{
+									experimental: { mouseEvents: true },
+									dataTransform: [
+										{type: 'filter', field: 'type', oneOf: ['gene']},
+										{type: 'filter', field: 'strand', oneOf: ['+']}
+									],
+									mark: 'rule',
+									x: {field: 'start', type: 'genomic'},
+									strokeWidth: {value: 3},
+									xe: {field: 'end', type: 'genomic'},
+									style: {linePattern: {type: 'triangleRight', size: 5}}
+								},
+								{
+									experimental: { mouseEvents: true },
+									dataTransform: [
+										{type: 'filter', field: 'type', oneOf: ['gene']},
+										{type: 'filter', field: 'strand', oneOf: ['-']}
+									],
+									mark: 'rule',
+									x: {field: 'start', type: 'genomic'},
+									strokeWidth: {value: 3},
+									xe: {field: 'end', type: 'genomic'},
+									style: {linePattern: {type: 'triangleLeft', size: 5}}
 								}
 							],
-							x: {field: 'start', type: 'genomic'},
-							xe: {field: 'end', type: 'genomic'},
-							color: { value: 'lightgrey' },
-							tooltip: [
-								{field: 'start', type: 'genomic'},
-								{field: 'end', type: 'genomic'},
-								{field: 'strand', type: 'nominal'},
+							row: {field: 'strand', type: 'nominal', domain: ['+', '-']},
+							color: {
+								field: 'strand',
+								type: 'nominal',
+								domain: ['+', '-'],
+								range: ['#7585FF', '#FF8A85']
+							},
+							visibility: [
+								{
+									operation: 'less-than',
+									measure: 'width',
+									threshold: '|xe-x|',
+									transitionPadding: 10,
+									target: 'mark'
+								}
 							],
-							row: {field: 'pileup-row', type: 'nominal', padding: 0.2},
-							width: 500,
-							height: 400
-						}
+							tooltip: [
+								{
+									field: 'name',
+									type: 'quantitative',
+									alt: 'Gene(exon)',
+								},
+								{
+									field: 'strand',
+									type: 'quantitative',
+									alt: 'Strand',
+								},
+								{field: 'start', type: 'genomic', alt: 'Start Position'},
+								{field: 'end', type: 'genomic', alt: 'End Position'},
+							],
+							opacity: {value: 0.8},
+							width: 1383,
+							height: 100
+						},
+
+						
+						// Cell type specific enhancer_track
+						{
+							alignment:':overlay',
+							assembly: 'hg38',
+							linkingId: 'view1',
+							xDomain: {chromosome: 'chr22', interval: [17084954-100000, 17115694+100000]},
+							tracks: [
+								{
+									alignment: 'overlay',
+									title: 'Active enhancers',
+									data: {
+										url: './cell_type_enhancers/enahncers_13celltypes.csv',
+										type: 'csv',
+										chromosomeField: 'chr',
+										genomicFields: ['p1', 'p2']
+									},
+									tracks: [
+										{
+											mark: 'rect',
+											dataTransform: [
+												{
+													type: 'filter',
+													field: 'gene',
+													oneOf: ['astrocyte-ENCODE@'+'IL17RA'],
+													not: true
+												},
+											],
+											color: {
+												field: 'gene',
+												type: 'nominal',
+												value: 'black'
+											},
+											size: {value: 60},
+										},
+										{
+											mark: 'rect',
+											dataTransform: [
+												{
+													type: 'filter', field: 'gene', oneOf: ['astrocyte-ENCODE@'+'IL17RA']
+												}
+											],
+											size: {value: 60},
+											color: {value: '#ff0000'},
+											stroke:{value:'red'},
+										},
+									],
+									tooltip: [
+										{
+											field: 'ind',
+											type: 'quantitative',
+											alt: 'Enhancer ID',
+										},
+										{field: 'p1', type: 'genomic', alt: 'Start Position'},
+										{field: 'p2', type: 'genomic', alt: 'End Position'},
+									],
+									x: {field: 'p1', type: 'genomic'},
+									xe: {field: 'p2', type: 'genomic'},
+									color: {
+										field: 'chr',
+										type: 'nominal',
+										range: ['black']
+									},
+									stroke: {
+										field: 'chr',
+										type: 'nominal',
+										range: ['black']
+									},
+									strokeWidth: {value: 1},
+									style: {
+										background: '#F8F8F8',outline: 'black',legendTitle:'left'
+									},
+									width: 1383,
+									height: 15
+								},
+
+								{
+									alignment: 'overlay',
+									title:'Astrocyte-ENCODE',
+									data: {
+										url: './cell_type_enhancers/astrocyte-ENCODE_arcs.csv',
+										type: 'csv',
+										chromosomeField: 'chr',
+										genomicFields: ['center', 'TSS']
+									},
+									dataTransform: [
+										{type: 'filter', field: 'gene', oneOf: ['IL17RA']},
+									],
+									tracks: [
+										{mark: 'withinLink'},
+									],
+									tooltip: [
+										{
+											field: 'gene',
+											type: 'quantitative',
+											alt: 'Connected  Gene',
+										},
+										{
+											field: 'score',
+											type: 'quantitative',
+											alt: 'ABC score (0~1)',
+											format: '.4'
+										},
+										{field: 'TSS', type: 'genomic', alt: 'Gene TSS'},
+										{field: 'center', type: 'genomic', alt: 'Enhancer Region Center'},
+									],
+									x: {field: 'TSS', type: 'genomic', linkingId: 'view1'},
+									xe: {field: 'center', type: 'genomic'},
+									stroke: {value: 'red'},
+									strokeWidth: {value: 1},
+									opacity: {value: 1},
+									style: {background: '#F8F8F8',outline: 'black',legendTitle:'left'},
+									width: 1383,
+									height: 60
+								}
+							]
+						},
+
 					]
 				}}
 				experimental={{ reactive: true }}
