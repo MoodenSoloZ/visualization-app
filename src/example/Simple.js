@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoslingComponent } from 'gosling.js';
-
+import EnhancersURL from '../cell_type_enhancers/segdup.txt'
 function SimpleExample() {
 	return (
 		<>
@@ -14,7 +14,7 @@ function SimpleExample() {
 								alignment: 'overlay',
 								data: {
 									//./cell_type_enhancers/segdup.txt
-									url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+									url: EnhancersURL,
 									type: 'csv',
 									headerNames: ['id', 'chr', 'p1', 'p2'],
 									chromosomePrefix: 'hs',

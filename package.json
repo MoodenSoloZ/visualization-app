@@ -1,16 +1,18 @@
 {
   "name": "gosling-react",
   "version": "0.1.0",
-  "homepage": "https://gosling-lang.github.io/gosling-react/",
+  "homepage": "https://moodensoloz.github.io/visualization-app/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "convert-csv-to-json": "^1.3.3",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.30.1",
     "gosling.js": "^0.9.21",
     "higlass": "^1.11.11",
+    "jquery-csv": "^1.0.21",
     "pixi.js": "6.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -27,7 +29,9 @@
     "test": "react-scripts test",
     "format": "npx eslint --fix --ext .js src/",
     "eject": "react-scripts eject",
-    "deploy": "yarn build; touch build/.nojekyll; gh-pages -d build -t --git git"
+    "deploy": "yarn build; touch build/.nojekyll; gh-pages -d build -t --git git",
+    "predeploy": "yarn build"
+
   },
   "eslintConfig": {
     "extends": [
@@ -37,10 +41,10 @@
   },
   "browserslist": [
     ">0.2%",
-   "not dead",
-   "not op_mini all"
- ],
+    "not dead",
+    "not op_mini all"
+  ],
   "devDependencies": {
-    "gh-pages": "^3.1.0"
+    "gh-pages": "^4.0.0"
   }
 }
