@@ -174,3 +174,5 @@ If you confront this error message when trying to install dependencies, add a `-
 npm add gosling.js higlass pixi.js --force
 ```
 # visualization-app
+“# react-deploy-github”
+# visualization-app
