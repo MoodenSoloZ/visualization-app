@@ -29,7 +29,7 @@
     "test": "react-scripts test",
     "format": "npx eslint --fix --ext .js src/",
     "eject": "react-scripts eject",
-    "deploy": "yarn build; touch build/.nojekyll; gh-pages -d build -t --git git",
+    "deploy": "gh-pages -d build",
     "predeploy": "yarn build"
 
   },

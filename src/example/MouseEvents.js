@@ -382,12 +382,12 @@ function MouseEvents() {
 			<div>
 				{position ? null: null}
 				
-				<div id='info' style={{backgroundColor: 'salmon',height: '50px',width: screen.width,position: 'fixed',zIndex:'10',padding:'10px'}}>
-					<b style={{fontSize: '25px',left:'10px',top:'-5px',position:'absolute'}}>{'Checked Gene:'+' '+gene}
+				<div id='info' style={{backgroundColor: 'salmon',height: '40px',width: screen.width,position: 'fixed',zIndex:'10',padding:'10px'}}>
+					<b style={{fontSize: '25px',left:'10px',top:'0px',position:'absolute'}}>{'Checked Gene:'+' '+gene}
 					</b>
-					<b style={{fontSize: '25px',left: screen.width/4,top:'-5px',position:'absolute'}}>{'Ensembl:'+' '+enseID}
+					<b style={{fontSize: '25px',left: screen.width/4,top:'0px',position:'absolute'}}>{'Ensembl:'+' '+enseID}
 					</b>
-					<b style={{fontSize: '25px',left: 2.1*screen.width/4,top:'-5px',position:'absolute'}}>{'Locus:'+' '+locus}
+					<b style={{fontSize: '25px',left: 2.1*screen.width/4,top:'0px',position:'absolute'}}>{'Locus:'+' '+locus}
 					</b>
 				</div>
 				
@@ -396,6 +396,7 @@ function MouseEvents() {
 					spec={{
 						title: 'Results',
 						style: {linkStyle: 'elliptical'},
+
 						views: cell_type_array,
 					}}
 					experimental={{ reactive: true }}
@@ -673,10 +674,10 @@ function MouseEvents() {
 			<div>
 				{position ? null: null}
 				
-				<div id='info' style={{backgroundColor: 'green',height: '50px',width: screen.width,position: 'fixed',zIndex:'10',padding:'10px'}}>
-					<b style={{fontSize: '25px',left:'10px',top:'-5px',position:'absolute'}}>{'Checked Enhancer:'+' '+enhancer}
+				<div id='info' style={{backgroundColor: 'green',height: '40px',width: screen.width,position: 'fixed',zIndex:'10',padding:'10px'}}>
+					<b style={{fontSize: '25px',left:'10px',top:'0px',position:'absolute'}}>{'Checked Enhancer:'+' '+enhancer}
 					</b>
-					<b style={{fontSize: '25px',left: 2.1*screen.width/4,top:'-5px',position:'absolute'}}>{'Location:'+' '+locus}
+					<b style={{fontSize: '25px',left: 2.1*screen.width/4,top:'0px',position:'absolute'}}>{'Location:'+' '+locus}
 					</b>
 				</div>
 				

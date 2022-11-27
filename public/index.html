@@ -3,12 +3,64 @@
     <head>
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="lightgray" />
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
         <link rel="stylesheet" href="https://unpkg.com/higlass@1.11.3/dist/hglib.css">
         <script src="https://cdn.tailwindcss.com"></script>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+              integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK"
+              crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/gh/fontenele/bootstrap-navbar-dropdowns@5.0.2/dist/css/bootstrap-navbar-dropdowns.min.css"
+              rel="stylesheet">
+
+        <link rel="stylesheet" href="form.css" />
+        <style>
+            html,
+            body {
+                overflow-x: hidden; /* Prevent scroll on narrow devices */
+            }
+
+            body {
+                padding-top: 56px;
+            }
+            .autocomplete {
+            position: relative;
+            display: inline-block;
+            }
+            .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 9999;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+            }
+
+            .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff; 
+            border-bottom: 1px solid #d4d4d4; 
+            }
+
+            /*when hovering an item:*/
+            .autocomplete-items div:hover {
+            background-color: #e9e9e9; 
+            }
+
+            /*when navigating through the items using the arrow keys:*/
+            .autocomplete-active {
+            background-color: DodgerBlue !important; 
+            color: #ffffff; 
+            }
+        </style>
         <style>
             /* To resolve style conflicts with Tailwind */
             .gosling-component { height: auto !important; }
@@ -17,7 +69,82 @@
     </head>
 
     <body>
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Database of Architectures of Cis Regulatory Regions</a>
+                
+                <form method="post" action="http://localhost:3000/DBACRR_v2/gene_submit2.php" id="login-form" class="login-form" autocomplete="off" role="main">
+                    <span id="span" class="required" style="position:relative; left:-10vh; top:0vh;font-size:larger;color: aqua;">Gene ID:</span>
+                    <input id="input" type="text" class="text" style="position:relative;left:-10vh; top:0vh;" name="gene" placeholder="Gene ID" tabindex="1" value="IL17RA" required />
+
+                    <span id="span2" class="required" style="position:relative; left:-8vh; top:0vh;font-size:larger;color: aqua;">Range init:</span>
+                    <input id="input2" type="text" class="text" style="position:relative; left:-8vh; top:0vh;;" name="range" placeholder="Default 100000bp" tabindex="1" value="100000" />
+
+                    <input type="submit"  style="position:relative ;left:-6vh; top:0vh;;font-size:larger;color: rgb(255, 247, 0);" value="Retry" />
+                </form>
+                  <script type="text/javascript">
+                    var url = window.location.href;  
+                    var ifgene = url.includes('gene');
+                    if(ifgene){
+                        //window.alert("sss")
+                        var frm=document.forms['login-form'];
+                        var gene=url.match(/=(\S*)@chr/)[1];
+                        var chr = url.match(/@chr(\S*)range1/)[1];
+                        var range1= url.match(/range1@(\S*)range2@/)[1];
+                        var range2= url.match(/range2@(\S*)@ensem/)[1];
+                        var enseID= url.match(/@ensem(\S*)@rangeinput/)[1];
+                        var range_input= url.match(/@rangeinput(\S*)/)[1];
+                        var locus='chr'+chr+':'+range1+'~'+range2+'(GRCh38/hg38)'
+
+                        frm.elements["gene"].value=gene
+                        frm.elements["range"].value=range_input
+
+                        document.getElementById("GeneID").innerHTML = gene;
+                        document.getElementById("enseID").innerHTML = enseID;
+                    }
+                    else{
+                        //window.alert("sss")
+                        var frm=document.forms['login-form'];
+                        var enhancer=url.match(/=(\S*)@chr/)[1];
+                        chr = url.match(/@chr(\S*)range1/)[1];
+                        range1= url.match(/range1@(\S*)range2@/)[1];
+                        range2= url.match(/range2@(\S*)@rangeinput/)[1];
+                        range_input= url.match(/@rangeinput(\S*)/)[1];
+                        locus=chr+':'+range1+'~'+range2+'(GRCh38/hg38)';
+                        document.getElementById("span").innerHTML = "EnhancerID:";
+                        document.getElementById("input").name = "enhancer";
+                        document.getElementById("input").value = enhancer;
+                        document.getElementById("input").placeholder = "<GeneID>@rank<Number>";
+                        frm.action="http://localhost:3000/DBACRR_v2/enhancer_submit2.php"
+
+
+                    }
+
+                </script>
+
+
+
+
+
+                <a class="navbar-brand" href="http://localhost:3000/DBACRR_v2/homepage.html" style="color: #ffffff88">Return Home</a>
+            </div>
+        </nav>
+
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+                integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"
+                integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/gh/fontenele/bootstrap-navbar-dropdowns@5.0.2/dist/js/bootstrap-navbar-dropdowns.min.js"></script>
+        <script>
+            $('.navbar').navbarDropdown({theme: 'bs5', trigger: 'mouseover'});
+        </script>
+        
     </body>
 </html>
