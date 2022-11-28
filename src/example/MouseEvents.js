@@ -84,7 +84,7 @@ function MouseEvents() {
 			const { genomicPosition: p } = eventData;
 			const { data: d } = eventData;
 			window.alert(d[0].gene);
-			window.location.assign('http://localhost:3000/DBACRR_v2/temp_jump_to_gene.html?enhancer='+'IL17RA@rank3')
+			window.location.assign('https://www.hgc.jp/~weihang/temp_jump_to_gene.html?enhancer='+'IL17RA@rank3')
 			setPosition(`${p.chromosome}:${p.position}`);
 			setData(eventData.data);
 		});
