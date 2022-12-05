@@ -258,7 +258,7 @@ function MouseEvents() {
 					title: 'Active enhancers',
 					experimental: { mouseEvents: true },
 					data: {
-						url: EnhancersURL,
+						url: 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/enhancers_13celltypes_gene_main.csv',
 						type: 'csv',
 						chromosomeField: 'chr',
 						genomicFields: ['p1', 'p2']
