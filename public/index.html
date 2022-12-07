@@ -82,19 +82,28 @@
                     <input type="submit"  style="position:relative ;left:-6vh; top:0vh;;font-size:larger;color: rgb(255, 247, 0);" value="Retry" />
                 </form>
                   <script type="text/javascript">
+                    function GetQueryString(name)
+                    {
+                        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+                        var r = window.location.search.substr(1).match(reg);
+                        if (r != null) {
+                            return unescape(r[2]);
+                        }
+                        return null;
+                    }
                     var url = window.location.href;  
                     var ifgene = url.includes('gene');
                     if(ifgene){
-                        //window.alert("sss")
+                        
                         var frm=document.forms['login-form'];
-                        var gene=url.match(/=(\S*)@chr/)[1];
-                        var chr = url.match(/@chr(\S*)range1/)[1];
-                        var range1= url.match(/range1@(\S*)range2@/)[1];
-                        var range2= url.match(/range2@(\S*)@ensem/)[1];
-                        var enseID= url.match(/@ensem(\S*)@rangeinput/)[1];
-                        var range_input= url.match(/@rangeinput(\S*)/)[1];
+                        var gene=GetQueryString('geneID');
+                        var chr=GetQueryString('chr');
+                        var range1=GetQueryString('range1');
+                        var range2=GetQueryString('range2');
+                        var enseID=GetQueryString('ensem');
+                        var range_input=GetQueryString('range_input');
                         var locus='chr'+chr+':'+range1+'~'+range2+'(GRCh38/hg38)'
-
+                        //window.alert(gene)
                         frm.elements["gene"].value=gene
                         frm.elements["range"].value=range_input
 

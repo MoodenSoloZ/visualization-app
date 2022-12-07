@@ -3,11 +3,21 @@ import { GoslingComponent } from 'gosling.js';
 import { VegaLite } from 'react-vega'
 
 
-import EnhancersURL from '../cell_type_enhancers/enhancers_13celltypes_gene_main.csv'
+//import EnhancersURL from '../cell_type_enhancers/enhancers_region_13celltypes.csv'
 import ArcsURL from '../cell_type_enhancers/astrocyte-ENCODE_arcs_gene_main.csv'
 
 import EnhancersURL_re from '../cell_type_enhancers/enhancers_13celltypes_enhancer_main.csv'
 import ArcsURL_re from '../cell_type_enhancers/astrocyte-ENCODE_arcs_enhancer_main.csv'
+
+function GetQueryString(name)
+{
+	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null) {
+		return unescape(r[2]);
+	}
+	return null;
+}
 
 const vegaLiteSpec = {
 	$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
@@ -113,12 +123,24 @@ function MouseEvents() {
 	//window.alert(ifgene);
 	if (ifgene){
 		
-		var gene=url.match(/=(\S*)@chr/)[1];
-		var chr = url.match(/@chr(\S*)range1/)[1];
-		var range1= url.match(/range1@(\S*)range2@/)[1];
-		var range2= url.match(/range2@(\S*)@ensem/)[1];
-		var enseID= url.match(/@ensem(\S*)@rangeinput/)[1];
-		var range_input= url.match(/@rangeinput(\S*)/)[1];
+		//var gene=url.match(/=(\S*)@chr/)[1];
+		//var chr = url.match(/@chr(\S*)range1/)[1];
+		//var range1= url.match(/range1@(\S*)range2@/)[1];
+		//var range2= url.match(/range2@(\S*)@ensem/)[1];
+		//var enseID= url.match(/@ensem(\S*)@rangeinput/)[1];
+		//var range_input= url.match(/@rangeinput(\S*)/)[1];
+
+		var gene=GetQueryString('geneID');
+		var chr=GetQueryString('chr');
+		var range1=GetQueryString('range1');
+		var range2=GetQueryString('range2');
+		var enseID=GetQueryString('ensem');
+		var range_input=GetQueryString('rangeinput');
+		var celltype_list=GetQueryString('celltypes').split(',');
+		//window.alert(celltype_list)
+
+		//var celltypes=GetQueryString('celltypes');
+		//window.alert(enseID);
 		var locus='chr'+chr+':'+range1+'~'+range2+'(GRCh38/hg38)'
 		//style='background-color: #cfc ; padding: 10px; border: 1px solid green;height: 40px;width: 1600px; position: fixed; top:0px; left: 0px;z-index: 10'>
 		// create one array containing the gene annotation and cell type specific tracks 
@@ -130,7 +152,8 @@ function MouseEvents() {
 			linkingId: 'view1',
 			xDomain: {chromosome: 'chr'+chr, interval: [parseInt(range1)-parseInt(range_input), parseInt(range2)+parseInt(range_input)]},
 			data: {
-				url: 'https://higlass.io/api/v1/tileset_info/?d=P0PLbQMwTYGy-5uPIQid7A',
+				//url: 'https://higlass.io/api/v1/tileset_info/?d=P0PLbQMwTYGy-5uPIQid7A',
+				url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
 				type: 'beddb',
 				genomicFields: [
 					{index: 1, name: 'start'},
@@ -247,127 +270,129 @@ function MouseEvents() {
 			width: plotwidth,
 			height: 100
 		};
-		const basic_cell_type_tracks={
-			alignment:':overlay',
-			assembly: 'hg38',
-			linkingId: 'view1',
-			xDomain: {chromosome: 'chr'+chr, interval: [parseInt(range1)-parseInt(range_input), parseInt(range2)+parseInt(range_input)]},
-			tracks: [
-				{
-					alignment: 'overlay',
-					title: 'Active enhancers',
-					experimental: { mouseEvents: true },
-					data: {
-						url: 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/enhancers_13celltypes_gene_main.csv',
-						type: 'csv',
-						chromosomeField: 'chr',
-						genomicFields: ['p1', 'p2']
-					},
-					tracks: [
-						{
-							mark: 'rect',
-							dataTransform: [
-								{
-									type: 'filter',
-									field: 'gene',
-									oneOf: ['astrocyte-ENCODE@'+gene],
-									not: true
-								},
-							],
-							color: {
-								field: 'gene',
-								type: 'nominal',
-								value: 'black'
-							},
-							size: {value: 60},
-						},
-						{
-							mark: 'rect',
-							dataTransform: [
-								{
-									type: 'filter', field: 'gene', oneOf: ['astrocyte-ENCODE@'+gene]
-								}
-							],
-							size: {value: 60},
-							color: {value: '#ff0000'},
-							stroke:{value:'red'},
-						},
-					],
-					tooltip: [
-						{
-							field: 'ind',
-							type: 'quantitative',
-							alt: 'Enhancer ID',
-						},
-						{field: 'p1', type: 'genomic', alt: 'Start Position'},
-						{field: 'p2', type: 'genomic', alt: 'End Position'},
-					],
-					x: {field: 'p1', type: 'genomic'},
-					xe: {field: 'p2', type: 'genomic'},
-					color: {
-						field: 'chr',
-						type: 'nominal',
-						range: ['black']
-					},
-					stroke: {
-						field: 'chr',
-						type: 'nominal',
-						range: ['black']
-					},
-					strokeWidth: {value: 1},
-					style: {
-						background: '#F8F8F8',outline: 'black',legendTitle:'left'
-					},
-					width: plotwidth,
-					height: 15
-				},
-
-				{
-					alignment: 'overlay',
-					title:'Astrocyte-ENCODE',
-					id: 'heatmap-track',
-					data: {
-						url: ArcsURL,
-						type: 'csv',
-						chromosomeField: 'chr',
-						genomicFields: ['center', 'TSS']
-					},
-					dataTransform: [
-						{type: 'filter', field: 'gene', oneOf: [gene]},
-					],
-					tracks: [
-						{mark: 'withinLink'},
-					],
-					tooltip: [
-						{
-							field: 'gene',
-							type: 'quantitative',
-							alt: 'Connected  Gene',
-						},
-						{
-							field: 'score',
-							type: 'quantitative',
-							alt: 'ABC score (0~1)',
-							format: '.4'
-						},
-						{field: 'TSS', type: 'genomic', alt: 'Gene TSS'},
-						{field: 'center', type: 'genomic', alt: 'Enhancer Region Center'},
-					],
-					x: {field: 'TSS', type: 'genomic', linkingId: 'view1'},
-					xe: {field: 'center', type: 'genomic'},
-					color: { field: 'score', type: 'quantitative', legend: true, range: 'pink' },
-					stroke: {value: 'red'},
-					strokeWidth: {value: 1},
-					opacity: {value: 1},
-					style: {background: '#F8F8F8',outline: 'black',legendTitle:'left'},
-					width: plotwidth,
-					height: 60
-				}
-			]
-		};
-		
 		cell_type_array.push(gene_annotation);
-		cell_type_array.push(basic_cell_type_tracks);
+		for (const celltype of celltype_list){
+			//window.alert(celltype)
+			var basic_cell_type_tracks={
+				alignment:':overlay',
+				assembly: 'hg38',
+				linkingId: 'view1',
+				xDomain: {chromosome: 'chr'+chr, interval: [parseInt(range1)-parseInt(range_input), parseInt(range2)+parseInt(range_input)]},
+				tracks: [
+					{
+						alignment: 'overlay',
+						title: 'Active enhancers',
+						experimental: { mouseEvents: true },
+						data: {
+							url: 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/'+celltype+'_arcs.csv',
+							type: 'csv',
+							chromosomeField: 'chr',
+							genomicFields: ['start', 'end']
+						},
+						tracks: [
+							{
+								mark: 'rect',
+								dataTransform: [
+									{
+										type: 'filter',
+										field: 'celltype_gene',
+										oneOf: [celltype+'@'+gene],
+										not: true
+									},
+								],
+								color: {
+									field: 'celltype_gene',
+									type: 'nominal',
+									value: 'black'
+								},
+								size: {value: 60},
+							},
+							{
+								mark: 'rect',
+								dataTransform: [
+									{
+										type: 'filter', field: 'celltype_gene', oneOf: [celltype+'@'+gene]
+									}
+								],
+								size: {value: 60},
+								color: {value: '#ff0000'},
+								stroke:{value:'red'},
+							},
+						],
+						tooltip: [
+							{
+								field: 'enhancer_id',
+								type: 'quantitative',
+								alt: 'Enhancer ID',
+							},
+							{field: 'start', type: 'genomic', alt: 'Start Position'},
+							{field: 'end', type: 'genomic', alt: 'End Position'},
+						],
+						x: {field: 'start', type: 'genomic'},
+						xe: {field: 'end', type: 'genomic'},
+						color: {
+							field: 'chr',
+							type: 'nominal',
+							range: ['black']
+						},
+						stroke: {
+							field: 'chr',
+							type: 'nominal',
+							range: ['black']
+						},
+						strokeWidth: {value: 1},
+						style: {
+							background: '#F8F8F8',outline: 'black',legendTitle:'left'
+						},
+						width: plotwidth,
+						height: 15
+					},
+	
+					{
+						alignment: 'overlay',
+						title: celltype,
+						id: 'heatmap-track',
+						data: {
+							url: ArcsURL,
+							type: 'csv',
+							chromosomeField: 'chr',
+							genomicFields: ['center', 'TSS']
+						},
+						dataTransform: [
+							{type: 'filter', field: 'gene', oneOf: [gene]},
+						],
+						tracks: [
+							{mark: 'withinLink'},
+						],
+						tooltip: [
+							{
+								field: 'gene',
+								type: 'quantitative',
+								alt: 'Connected  Gene',
+							},
+							{
+								field: 'score',
+								type: 'quantitative',
+								alt: 'ABC score (0~1)',
+								format: '.4'
+							},
+							{field: 'TSS', type: 'genomic', alt: 'Gene TSS'},
+							{field: 'center', type: 'genomic', alt: 'Enhancer Region Center'},
+						],
+						x: {field: 'TSS', type: 'genomic', linkingId: 'view1'},
+						xe: {field: 'center', type: 'genomic'},
+						color: { field: 'score', type: 'quantitative', legend: true, range: 'pink' },
+						stroke: {value: 'red'},
+						strokeWidth: {value: 1},
+						opacity: {value: 1},
+						style: {background: '#F8F8F8',outline: 'black',legendTitle:'left'},
+						width: plotwidth,
+						height: 60
+					}
+				]
+			};
+			cell_type_array.push(basic_cell_type_tracks);
+		}
 
 		//const cell_type_name = ['astrocyte-ENCODE@']
 		//for (const element of cell_type_name){
