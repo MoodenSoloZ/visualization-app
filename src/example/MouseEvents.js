@@ -4,7 +4,7 @@ import { VegaLite } from 'react-vega'
 
 
 //import EnhancersURL from '../cell_type_enhancers/enhancers_region_13celltypes.csv'
-import ArcsURL from '../cell_type_enhancers/astrocyte-ENCODE_arcs_gene_main.csv'
+//import ArcsURL from '../cell_type_enhancers/astrocyte-ENCODE_arcs_gene_main.csv'
 
 import EnhancersURL_re from '../cell_type_enhancers/enhancers_13celltypes_enhancer_main.csv'
 import ArcsURL_re from '../cell_type_enhancers/astrocyte-ENCODE_arcs_enhancer_main.csv'
@@ -284,7 +284,7 @@ function MouseEvents() {
 						title: 'Active enhancers',
 						experimental: { mouseEvents: true },
 						data: {
-							url: 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/'+celltype+'_arcs.csv',
+							url:'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/enhancers_region_13celltypes.csv',
 							type: 'csv',
 							chromosomeField: 'chr',
 							genomicFields: ['start', 'end']
@@ -353,7 +353,7 @@ function MouseEvents() {
 						title: celltype,
 						id: 'heatmap-track',
 						data: {
-							url: ArcsURL,
+							url:'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/'+celltype+'_arcs.csv',
 							type: 'csv',
 							chromosomeField: 'chr',
 							genomicFields: ['center', 'TSS']
