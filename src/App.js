@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Routes, Route} from 'react-router-dom';
-import SimpleExample from './example/Simple';
+//import SimpleExample from './example/Simple';
 //import VegaLiteExample from './example/VegaLite';
 //import WidgetEncoding from './example/WidgetEncoding';
 //import WidgetNavigation from './example/WidgetNavigation';
