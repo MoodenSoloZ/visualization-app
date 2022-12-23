@@ -78,7 +78,8 @@
 
                     <span id="span2" class="required" style="position:relative; left:-8vh; top:0vh;font-size:larger;color: aqua;">Range init:</span>
                     <input id="input2" type="text" class="text" style="position:relative; left:-8vh; top:0vh;;" name="range" placeholder="Default 100000bp" tabindex="1" value="100000" />
-                    <input type="text" class="text" name="celltypes" value= "0" />
+                    
+                    <input style="visibility: hidden" type="text" class="text" name="celltypes" value= "0" />
 
                     <input type="submit"  style="position:relative ;left:-6vh; top:0vh;;font-size:larger;color: rgb(255, 247, 0);" value="Retry" />
                     
@@ -104,10 +105,11 @@
                         var range1=GetQueryString('range1');
                         var range2=GetQueryString('range2');
                         var enseID=GetQueryString('ensem');
-                        var range_input=GetQueryString('range_input');
+                        var range_input=GetQueryString('rangeinput');
                         var celltypes=GetQueryString('celltypes');
                         var locus='chr'+chr+':'+range1+'~'+range2+'(GRCh38/hg38)'
-                        //window.alert(gene)
+
+                        window.alert(celltypes)
                         frm.elements["gene"].value=gene
                         frm.elements["range"].value=range_input
                         frm.elements["celltypes"].value=celltypes;
