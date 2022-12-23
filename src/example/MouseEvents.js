@@ -1,13 +1,75 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { GoslingComponent } from 'gosling.js';
-import { VegaLite } from 'react-vega'
 
 
-//import EnhancersURL from '../cell_type_enhancers/enhancers_region_13celltypes.csv'
-//import ArcsURL from '../cell_type_enhancers/astrocyte-ENCODE_arcs_gene_main.csv'
+const enhancer_region='https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancers_region_13celltypes.csv'
 
-import EnhancersURL_re from '../cell_type_enhancers/enhancers_13celltypes_enhancer_main.csv'
-import ArcsURL_re from '../cell_type_enhancers/astrocyte-ENCODE_arcs_enhancer_main.csv'
+const celltype1_gm='https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/adrenal_gland_fetal-ENCODE_arcs.csv'
+const celltype2_gm= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/adrenal_gland-ENCODE_arcs.csv'
+const celltype3_gm= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/astrocyte-ENCODE_arcs.csv'
+const celltype4_gm='https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/B_cell-ENCODE_arcs.csv'
+const celltype5_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/bipolar_neuron_from_iPSC-ENCODE_arcs.csv'
+const celltype6_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/CD4-positive_helper_T_cell-ENCODE_arcs.csv'
+const celltype7_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/CD8-positive_alpha-beta_T_cell-ENCODE_arcs.csv'
+const celltype8_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/CD14-positive_monocytes-Roadmap_arcs.csv'
+const celltype9_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/CD56-positive_natural_killer_cells-Roadmap_arcs.csv'
+const celltype10_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/H1_Derived_Mesenchymal_Stem_Cells-Roadmap_arcs.csv'
+const celltype11_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/skeletal_muscle_myoblast-Roadmap_arcs.csv'
+const celltype12_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/gene_main/spinal_cord_fetal-ENCODE_arcs.csv'
+const celltype13_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/transverse_colon-ENCODE_arcs.csv'
+
+const celltype1_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/adrenal_gland_fetal-ENCODE_arcs.csv'
+const celltype2_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/adrenal_gland-ENCODE_arcs.csv'
+const celltype3_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/astrocyte-ENCODE_arcs.csv'
+const celltype4_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/B_cell-ENCODE_arcs.csv'
+const celltype5_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/bipolar_neuron_from_iPSC-ENCODE_arcs.csv'
+const celltype6_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/CD4-positive_helper_T_cell-ENCODE_arcs.csv'
+const celltype7_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/CD8-positive_alpha-beta_T_cell-ENCODE_arcs.csv'
+const celltype8_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/CD14-positive_monocytes-Roadmap_arcs.csv'
+const celltype9_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/CD56-positive_natural_killer_cells-Roadmap_arcs.csv'
+const celltype10_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/H1_Derived_Mesenchymal_Stem_Cells-Roadmap_arcs.csv'
+const celltype11_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/skeletal_muscle_myoblast-Roadmap_arcs.csv'
+const celltype12_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/spinal_cord_fetal-ENCODE_arcs.csv'
+const celltype13_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/transverse_colon-ENCODE_arcs.csv'
+
+const dic_gm={
+	'adrenal_gland_fetal-ENCODE':celltype1_gm,
+	'adrenal_gland-ENCODE':celltype2_gm,
+	'astrocyte-ENCODE':celltype3_gm,
+	'B_cell-ENCODE':celltype4_gm,
+	'bipolar_neuron_from_iPSC-ENCODE':celltype5_gm,
+	'CD4-positive_helper_T_cell-ENCODE':celltype6_gm,
+	'CD8-positive_alpha-beta_T_cell-ENCODE':celltype7_gm,
+	'CD14-positive_monocytes-Roadmap':celltype8_gm,
+	'CD56-positive_natural_killer_cells-Roadmap':celltype9_gm,
+	'H1_Derived_Mesenchymal_Stem_Cells-Roadmap':celltype10_gm,
+	'skeletal_muscle_myoblast-Roadmap':celltype11_gm,
+	'spinal_cord_fetal-ENCODE':celltype12_gm,
+	'transverse_colon-ENCODE':celltype13_gm
+}
+
+const dic_em={
+	'adrenal_gland_fetal-ENCODE':celltype1_em,
+	'adrenal_gland-ENCODE':celltype2_em,
+	'astrocyte-ENCODE':celltype3_em,
+	'B_cell-ENCODE':celltype4_em,
+	'bipolar_neuron_from_iPSC-ENCODE':celltype5_em,
+	'CD4-positive_helper_T_cell-ENCODE':celltype6_em,
+	'CD8-positive_alpha-beta_T_cell-ENCODE':celltype7_em,
+	'CD14-positive_monocytes-Roadmap':celltype8_em,
+	'CD56-positive_natural_killer_cells-Roadmap':celltype9_em,
+	'H1_Derived_Mesenchymal_Stem_Cells-Roadmap':celltype10_em,
+	'skeletal_muscle_myoblast-Roadmap':celltype11_em,
+	'spinal_cord_fetal-ENCODE':celltype12_em,
+	'transverse_colon-ENCODE':celltype13_em
+}
+
+
+
+
+
+	
+
 
 function GetQueryString(name)
 {
@@ -18,68 +80,6 @@ function GetQueryString(name)
 	}
 	return null;
 }
-
-const vegaLiteSpec = {
-	$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-	height: 60,
-	width:150,
-	data: {
-		values: [
-			{a: 'C', b: 2},
-			{a: 'C', b: 7},
-			{a: 'C', b: 4},
-			{a: 'D', b: 1},
-			{a: 'D', b: 2},
-			{a: 'D', b: 6},
-			{a: 'E', b: 8},
-			{a: 'E', b: 4},
-			{a: 'E', b: 7}
-		]
-	},
-	mark: 'bar',
-	encoding: {
-		y: {field: 'a', type: 'nominal'},
-		x: {
-			aggregate: 'average',
-			field: 'b',
-			type: 'quantitative',
-			axis: {
-				title: 'Average of b'
-			}
-		}
-	}
-};
-const vegaLiteSpec2 = {
-	$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-	height: 100,
-	width:150,
-	data: {
-		values: [
-			{a: 'C', b: 2},
-			{a: 'C', b: 7},
-			{a: 'C', b: 4},
-			{a: 'D', b: 1},
-			{a: 'D', b: 2},
-			{a: 'D', b: 6},
-			{a: 'E', b: 8},
-			{a: 'E', b: 4},
-			{a: 'E', b: 7}
-		]
-	},
-	mark: 'bar',
-	
-	encoding: {
-		y: {field: 'a', type: 'nominal'},
-		x: {
-			aggregate: 'average',
-			field: 'b',
-			type: 'quantitative',
-			axis: {
-				title: 'Average of b'
-			}
-		}
-	}
-};
 
 function MouseEvents() {
 
@@ -93,8 +93,11 @@ function MouseEvents() {
 		gosRef.current.api.subscribe('click', (_, eventData) => {
 			const { genomicPosition: p } = eventData;
 			const { data: d } = eventData;
-			window.alert(d[0].gene);
-			window.location.assign('https://www.hgc.jp/~weihang/temp_jump_to_gene.html?enhancer='+'IL17RA@rank3')
+			//window.alert(d[0].enhancer_id);
+
+			//window.location.assign('https://www.hgc.jp/~weihang/temp_jump_to_gene.html?enhancer='+d[0].enhancer_id)
+			var celltypes_to_enhancer=GetQueryString('celltypes');
+			window.location.assign('https://www.hgc.jp/~weihang/temp_jump_to_gene.html?enhancerID='+d[0].enhancer_id+'&'+'celltypes='+celltypes_to_enhancer)
 			setPosition(`${p.chromosome}:${p.position}`);
 			setData(eventData.data);
 		});
@@ -119,7 +122,7 @@ function MouseEvents() {
 
 	var url = window.location.href;  
 	var ifgene = url.includes('gene');
-	const plotwidth=screen.width*0.75
+	const plotwidth=screen.width*0.9
 	//window.alert(ifgene);
 	if (ifgene){
 		
@@ -284,7 +287,8 @@ function MouseEvents() {
 						title: 'Active enhancers',
 						experimental: { mouseEvents: true },
 						data: {
-							url:'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/enhancers_region_13celltypes.csv',
+							//url:'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/enhancers_region_13celltypes.csv',
+							url: enhancer_region,
 							type: 'csv',
 							chromosomeField: 'chr',
 							genomicFields: ['start', 'end']
@@ -351,9 +355,9 @@ function MouseEvents() {
 					{
 						alignment: 'overlay',
 						title: celltype,
-						id: 'heatmap-track',
 						data: {
-							url:'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/'+celltype+'_arcs.csv',
+							//url:'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/'+celltype+'_arcs.csv',
+							url: dic_gm[celltype],
 							type: 'csv',
 							chromosomeField: 'chr',
 							genomicFields: ['center', 'TSS']
@@ -381,7 +385,7 @@ function MouseEvents() {
 						],
 						x: {field: 'TSS', type: 'genomic', linkingId: 'view1'},
 						xe: {field: 'center', type: 'genomic'},
-						color: { field: 'score', type: 'quantitative', legend: true, range: 'pink' },
+						color: { field: 'score', type: 'quantitative'},
 						stroke: {value: 'red'},
 						strokeWidth: {value: 1},
 						opacity: {value: 1},
@@ -427,18 +431,19 @@ function MouseEvents() {
 					experimental={{ reactive: true }}
 				/>
 				{data.length === 0 ? null : null}
-				<div style={{ position: 'absolute', left: screen.width*0.8, top:'250px' }}><VegaLite spec={vegaLiteSpec} /></div>
+				
 			</div>
 		);
 	}
 
 
 	else{
-		var enhancer=url.match(/=(\S*)@chr/)[1];
-		chr = url.match(/@chr(\S*)range1/)[1];
-		range1= url.match(/range1@(\S*)range2@/)[1];
-		range2= url.match(/range2@(\S*)@rangeinput/)[1];
-		range_input= url.match(/@rangeinput(\S*)/)[1];
+		var enhancer=GetQueryString('enhancerID');
+		chr =GetQueryString('chr');
+		range1= GetQueryString('range1');
+		range2=GetQueryString('range2');
+		range_input= GetQueryString('rangeinput');
+		celltype_list=GetQueryString('celltypes').split(',');
 		locus=chr+':'+range1+'~'+range2+'(GRCh38/hg38)'
 		cell_type_array=[];
 		const enhancer_annotation={
@@ -451,10 +456,10 @@ function MouseEvents() {
 					alignment: 'overlay',
 					title: 'Enhancer annotation',
 					data: {
-						url: EnhancersURL_re,
+						url: enhancer_region,
 						type: 'csv',
 						chromosomeField: 'chr',
-						genomicFields: ['p1', 'p2']
+						genomicFields: ['start', 'end']
 					},
 					tracks: [
 						{
@@ -462,13 +467,13 @@ function MouseEvents() {
 							dataTransform: [
 								{
 									type: 'filter',
-									field: 'enhancerID',
+									field: 'enhancer_id',
 									oneOf: [enhancer],
 									not: true
 								},
 							],
 							color: {
-								field: 'enhancerID',
+								field: 'enhancer_id',
 								type: 'nominal',
 								value: 'black'
 							},
@@ -477,7 +482,7 @@ function MouseEvents() {
 						{
 							mark: 'rect',
 							dataTransform: [
-								{type: 'filter', field: 'enhancerID', oneOf: [enhancer]}
+								{type: 'filter', field: 'enhancer_id', oneOf: [enhancer]}
 							],
 							size: {value: 60},
 							color: {value: '#ff0000'},
@@ -486,15 +491,15 @@ function MouseEvents() {
 					],
 					tooltip: [
 						{
-							field: 'enhancerID',
+							field: 'enhancer_id',
 							type: 'quantitative',
 							alt: 'Enhancer ID',
 						},
-						{field: 'p1', type: 'genomic', alt: 'Start Position'},
-						{field: 'p2', type: 'genomic', alt: 'End Position'},
+						{field: 'start', type: 'genomic', alt: 'Start Position'},
+						{field: 'end', type: 'genomic', alt: 'End Position'},
 					],
-					x: {field: 'p1', type: 'genomic'},
-					xe: {field: 'p2', type: 'genomic'},
+					x: {field: 'start', type: 'genomic'},
+					xe: {field: 'end', type: 'genomic'},
 					color: {
 						field: 'chr',
 						type: 'nominal',
@@ -511,190 +516,195 @@ function MouseEvents() {
 				},
 			]			
 		}
-
-		const basic_cell_type_tracks={
-			alignment:':overlay',
-			assembly: 'hg38',
-			linkingId: 'view1',
-			xDomain: {chromosome: chr, interval: [parseInt(range1)-parseInt(range_input)/2, parseInt(range2)+parseInt(range_input)/2]},
-			tracks: [
-				{
-					alignment: 'overlay',
-					assembly: 'hg38',
-					title: 'Gene annotation',
-					linkingId: 'view1',
-					
-					xDomain: {chromosome: chr, interval: [parseInt(range1)-parseInt(range_input)/2, parseInt(range2)+parseInt(range_input)/2]},
-					data: {
-						url: 'https://higlass.io/api/v1/tileset_info/?d=P0PLbQMwTYGy-5uPIQid7A',
-						type: 'beddb',
-						genomicFields: [
-							{index: 1, name: 'start'},
-							{index: 2, name: 'end'}
-						],
-						valueFields: [
-							{index: 5, name: 'strand', type: 'nominal'},
-							{index: 3, name: 'name', type: 'nominal'}
-						],
-						exonIntervalFields: [
-							{index: 12, name: 'start'},
-							{index: 13, name: 'end'}
-						]
-					},
-					tracks: [
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['gene']},
-								{type: 'filter', field: 'strand', oneOf: ['+']}
-							],
-							mark: 'triangleRight',
-							x: {field: 'end', type: 'genomic', axis: 'top'},
-							size: {value: 5},
-						},
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['gene']},
-								{type: 'filter', field: 'strand', oneOf: ['+']}
-							],
-							mark: 'text',
-							text: {field: 'name', type: 'nominal'},
-							x: {field: 'start', type: 'genomic'},
-							xe: {field: 'end', type: 'genomic'},
-							style: {dy: -8}
-						},
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['gene']},
-								{type: 'filter', field: 'strand', oneOf: ['-']}
-							],
-							mark: 'text',
-							text: {field: 'name', type: 'nominal'},
-							x: {field: 'start', type: 'genomic'},
-							xe: {field: 'end', type: 'genomic'},
-							style: {dy: +8}
-						},
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['gene']},
-								{type: 'filter', field: 'strand', oneOf: ['-']}
-							],
-							mark: 'triangleLeft',
-							x: {field: 'start', type: 'genomic'},
-							size: {value: 5},
-							style: {align: 'right'}
-						},
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['exon']}
-							],
-							mark: 'rect',
-							x: {field: 'start', type: 'genomic'},
-							size: {value: 5},
-							xe: {field: 'end', type: 'genomic'}
-						},
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['gene']},
-								{type: 'filter', field: 'strand', oneOf: ['+']}
-							],
-							mark: 'rule',
-							x: {field: 'start', type: 'genomic'},
-							strokeWidth: {value: 1},
-							xe: {field: 'end', type: 'genomic'},
-							style: {linePattern: {type: 'triangleRight', size: 2}}
-						},
-						{
-							dataTransform: [
-								{type: 'filter', field: 'type', oneOf: ['gene']},
-								{type: 'filter', field: 'strand', oneOf: ['-']}
-							],
-							mark: 'rule',
-							x: {field: 'start', type: 'genomic'},
-							strokeWidth: {value: 1},
-							xe: {field: 'end', type: 'genomic'},
-							style: {linePattern: {type: 'triangleLeft', size: 2}}
-						}
-					],
-					row: {field: 'strand', type: 'nominal', domain: ['+', '-']},
-					color: {
-						field: 'strand',
-						type: 'nominal',
-						domain: ['+', '-'],
-						range: ['#7585FF', '#FF8A85']
-					},
-					visibility: [
-						{
-							operation: 'less-than',
-							measure: 'width',
-							threshold: '|xe-x|',
-							transitionPadding: 10,
-							target: 'mark'
-						}
-					],
-					tooltip: [
-						{
-							field: 'name',
-							type: 'quantitative',
-							alt: 'Gene(exon)',
-						},
-						{
-							field: 'strand',
-							type: 'quantitative',
-							alt: 'Strand',
-						},
-						{field: 'start', type: 'genomic', alt: 'Start Position'},
-						{field: 'end', type: 'genomic', alt: 'End Position'},
-					],
-					opacity: {value: 0.8},
-					width: plotwidth,
-					height: 50,
-					style: {
-						background: '#F8F8F8',outline: 'black',legendTitle:'left',mouseOver:{color:'red'},
-					},
-				},
-				{
-					alignment: 'overlay',
-					title:'Astrocyte-ENCODE',
-					data: {
-						url: ArcsURL_re,
-						type: 'csv',
-						chromosomeField: 'chr',
-						genomicFields: ['center', 'TSS']
-					},
-					dataTransform: [
-						{type: 'filter', field: 'enhancerID', oneOf: [enhancer]},
-					],
-					tracks: [
-						{mark: 'withinLink'},
-					],
-					tooltip: [
-						{
-							field: 'enhancerID',
-							type: 'quantitative',
-							alt: 'Connected  Enhancer',
-						},
-						{
-							field: 'score',
-							type: 'quantitative',
-							alt: 'ABC score (0~1)',
-							format: '.4'
-						},
-						{field: 'TSS', type: 'genomic', alt: 'Gene TSS'},
-						{field: 'center', type: 'genomic', alt: 'Enhancer Region Center'},
-					],
-					x: {field: 'TSS', type: 'genomic', linkingId: 'view1'},
-					xe: {field: 'center', type: 'genomic'},
-					stroke: {value: 'red'},
-					strokeWidth: {value: 1},
-					opacity: {value: 1},
-					style: {background: '#F8F8F8',outline: 'black',legendTitle:'left'},
-					width: plotwidth,
-					height: 60
-				}
-			]
-		}
 		cell_type_array.push(enhancer_annotation);
-		cell_type_array.push(basic_cell_type_tracks);
+
+		for (const celltype of celltype_list){
+			//window.alert(celltype)
+			const basic_cell_type_tracks={
+				alignment:':overlay',
+				assembly: 'hg38',
+				linkingId: 'view1',
+				xDomain: {chromosome: chr, interval: [parseInt(range1)-parseInt(range_input)/2, parseInt(range2)+parseInt(range_input)/2]},
+				tracks: [
+					{
+						alignment: 'overlay',
+						assembly: 'hg38',
+						title: 'Gene annotation',
+						linkingId: 'view1',
+						
+						xDomain: {chromosome: chr, interval: [parseInt(range1)-parseInt(range_input)/2, parseInt(range2)+parseInt(range_input)/2]},
+						data: {
+							//url: 'https://higlass.io/api/v1/tileset_info/?d=P0PLbQMwTYGy-5uPIQid7A',
+							url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+							type: 'beddb',
+							genomicFields: [
+								{index: 1, name: 'start'},
+								{index: 2, name: 'end'}
+							],
+							valueFields: [
+								{index: 5, name: 'strand', type: 'nominal'},
+								{index: 3, name: 'name', type: 'nominal'}
+							],
+							exonIntervalFields: [
+								{index: 12, name: 'start'},
+								{index: 13, name: 'end'}
+							]
+						},
+						tracks: [
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['gene']},
+									{type: 'filter', field: 'strand', oneOf: ['+']}
+								],
+								mark: 'triangleRight',
+								x: {field: 'end', type: 'genomic', axis: 'top'},
+								size: {value: 5},
+							},
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['gene']},
+									{type: 'filter', field: 'strand', oneOf: ['+']}
+								],
+								mark: 'text',
+								text: {field: 'name', type: 'nominal'},
+								x: {field: 'start', type: 'genomic'},
+								xe: {field: 'end', type: 'genomic'},
+								style: {dy: -8}
+							},
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['gene']},
+									{type: 'filter', field: 'strand', oneOf: ['-']}
+								],
+								mark: 'text',
+								text: {field: 'name', type: 'nominal'},
+								x: {field: 'start', type: 'genomic'},
+								xe: {field: 'end', type: 'genomic'},
+								style: {dy: +8}
+							},
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['gene']},
+									{type: 'filter', field: 'strand', oneOf: ['-']}
+								],
+								mark: 'triangleLeft',
+								x: {field: 'start', type: 'genomic'},
+								size: {value: 5},
+								style: {align: 'right'}
+							},
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['exon']}
+								],
+								mark: 'rect',
+								x: {field: 'start', type: 'genomic'},
+								size: {value: 5},
+								xe: {field: 'end', type: 'genomic'}
+							},
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['gene']},
+									{type: 'filter', field: 'strand', oneOf: ['+']}
+								],
+								mark: 'rule',
+								x: {field: 'start', type: 'genomic'},
+								strokeWidth: {value: 1},
+								xe: {field: 'end', type: 'genomic'},
+								style: {linePattern: {type: 'triangleRight', size: 2}}
+							},
+							{
+								dataTransform: [
+									{type: 'filter', field: 'type', oneOf: ['gene']},
+									{type: 'filter', field: 'strand', oneOf: ['-']}
+								],
+								mark: 'rule',
+								x: {field: 'start', type: 'genomic'},
+								strokeWidth: {value: 1},
+								xe: {field: 'end', type: 'genomic'},
+								style: {linePattern: {type: 'triangleLeft', size: 2}}
+							}
+						],
+						row: {field: 'strand', type: 'nominal', domain: ['+', '-']},
+						color: {
+							field: 'strand',
+							type: 'nominal',
+							domain: ['+', '-'],
+							range: ['#7585FF', '#FF8A85']
+						},
+						visibility: [
+							{
+								operation: 'less-than',
+								measure: 'width',
+								threshold: '|xe-x|',
+								transitionPadding: 10,
+								target: 'mark'
+							}
+						],
+						tooltip: [
+							{
+								field: 'name',
+								type: 'quantitative',
+								alt: 'Gene(exon)',
+							},
+							{
+								field: 'strand',
+								type: 'quantitative',
+								alt: 'Strand',
+							},
+							{field: 'start', type: 'genomic', alt: 'Start Position'},
+							{field: 'end', type: 'genomic', alt: 'End Position'},
+						],
+						opacity: {value: 0.8},
+						width: plotwidth,
+						height: 50,
+						style: {
+							background: '#F8F8F8',outline: 'black',legendTitle:'left',mouseOver:{color:'red'},
+						},
+					},
+					{
+						alignment: 'overlay',
+						title: celltype,
+						data: {
+							url: dic_em[celltype],
+							type: 'csv',
+							chromosomeField: 'chr',
+							genomicFields: ['center', 'tss']
+						},
+						dataTransform: [
+							{type: 'filter', field: 'enhancer_id', oneOf: [enhancer]},
+						],
+						tracks: [
+							{mark: 'withinLink'},
+						],
+						tooltip: [
+							{
+								field: 'enhancer_id',
+								type: 'quantitative',
+								alt: 'Connected  Enhancer',
+							},
+							{
+								field: 'ABC.Score',
+								type: 'quantitative',
+								alt: 'ABC score (0~1)',
+								format: '.4'
+							},
+							{field: 'tss', type: 'genomic', alt: 'Gene TSS'},
+							{field: 'center', type: 'genomic', alt: 'Enhancer Region Center'},
+						],
+						x: {field: 'tss', type: 'genomic', linkingId: 'view1'},
+						xe: {field: 'center', type: 'genomic'},
+						stroke: {value: 'red'},
+						strokeWidth: {value: 1},
+						opacity: {value: 1},
+						style: {background: '#F8F8F8',outline: 'black',legendTitle:'left'},
+						width: plotwidth,
+						height: 60
+					}
+				]
+			}
+			cell_type_array.push(basic_cell_type_tracks);
+		}
+
 		return (
 			<div>
 				{position ? null: null}
@@ -716,7 +726,6 @@ function MouseEvents() {
 					experimental={{ reactive: true }}
 				/>
 				{data.length === 0 ? null : null}
-				<div style={{ position: 'absolute', left: screen.width*0.8, top:'250px' }}><VegaLite spec={vegaLiteSpec2} /></div>
 			</div>
 		);
 	}

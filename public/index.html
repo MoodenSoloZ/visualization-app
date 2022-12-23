@@ -114,17 +114,21 @@
                     else{
                         //window.alert("sss")
                         var frm=document.forms['login-form'];
-                        var enhancer=url.match(/=(\S*)@chr/)[1];
-                        chr = url.match(/@chr(\S*)range1/)[1];
-                        range1= url.match(/range1@(\S*)range2@/)[1];
-                        range2= url.match(/range2@(\S*)@rangeinput/)[1];
-                        range_input= url.match(/@rangeinput(\S*)/)[1];
-                        locus=chr+':'+range1+'~'+range2+'(GRCh38/hg38)';
+                        var enhancer=GetQueryString('enhancerID');
+                        chr =GetQueryString('chr');
+                        range1= GetQueryString('range1');
+                        range2=GetQueryString('range2');
+                        range_input= GetQueryString('rangeinput');
+                        celltype_list=GetQueryString('celltypes').split(',');
+                        locus=chr+':'+range1+'~'+range2+'(GRCh38/hg38)'
+                        
+
+                       
                         document.getElementById("span").innerHTML = "EnhancerID:";
                         document.getElementById("input").name = "enhancer";
                         document.getElementById("input").value = enhancer;
-                        document.getElementById("input").placeholder = "<GeneID>@rank<Number>";
-                        frm.action="http://localhost:3000/DBACRR_v2/enhancer_submit2.php"
+                        document.getElementById("input").placeholder = "<EnhancerID>@<Rank Number>";
+                        frm.action="http://localhost:3000/DBACRR_v2/enhancer_submit.php"
 
 
                     }
@@ -135,7 +139,7 @@
 
 
 
-                <a class="navbar-brand" href="https://www.hgc.jp/~weihang/homepage.html" style="color: #ffffff88">Return Home</a>
+                <a class="navbar-brand" href="http://localhost:3000/DBACRR_v2/homepage.html" style="color: #ffffff88">Return Home</a>
             </div>
         </nav>
 
