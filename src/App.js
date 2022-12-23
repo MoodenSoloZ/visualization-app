@@ -9,7 +9,7 @@ import MouseEvents from './example/MouseEvents';
 
 // The full list of examples
 const examples = {
-	Simple: <SimpleExample/>,
+	//Simple: <SimpleExample/>,
 	//'Widget (Encoding)': <WidgetEncoding/>,
 	//'Widget (Navigation)': <WidgetNavigation/>,
 	MouseEvents: <MouseEvents/>,
