@@ -15,7 +15,7 @@ const celltype8_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazon
 const celltype9_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/CD56-positive_natural_killer_cells-Roadmap_arcs.csv'
 const celltype10_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/H1_Derived_Mesenchymal_Stem_Cells-Roadmap_arcs.csv'
 const celltype11_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/skeletal_muscle_myoblast-Roadmap_arcs.csv'
-const celltype12_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/gene_main/spinal_cord_fetal-ENCODE_arcs.csv'
+const celltype12_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/spinal_cord_fetal-ENCODE_arcs.csv'
 const celltype13_gm=  'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/gene_main/transverse_colon-ENCODE_arcs.csv'
 
 const celltype1_em= 'https://gene-enhancer-interaction.s3.ap-northeast-1.amazonaws.com/cell_type_enhancers/13celltypes_arcs/enhancer_main/adrenal_gland_fetal-ENCODE_arcs.csv'
